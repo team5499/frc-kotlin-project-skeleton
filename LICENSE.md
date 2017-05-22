@@ -1,6 +1,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2017 Team 5499: The Bay Orangutans
+
 Copyright (c) 2016 FRC Team 1678: Citrus Circuits
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
