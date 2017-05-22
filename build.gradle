@@ -1,0 +1,51 @@
+ext {
+  wpilib_version = '2017.3.1'
+  opencv_version = '3.1.0'
+  networktables_version = '3.1.7'
+  cameraserver_version = '1.0.2'
+}
+
+buildscript {
+  ext {
+    kotlin_version = '1.1.2-2'
+  }
+
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+apply plugin: 'kotlin'
+
+repositories {
+  mavenCentral()
+  maven {
+    url 'http://first.wpi.edu/FRC/roborio/maven/release'
+  }
+}
+
+dependencies {
+  compile 'org.jetbrains.kotlin:kotlin-stdlib'
+  compile "edu.wpi.first.wpilibj:athena:$wpilib_version"
+  compile "org.opencv:opencv-java:$opencv_version"
+  compile "edu.wpi.first.wpilib.networktables.java:NetworkTables:$networktables_version:arm"
+  compile "edu.wpi.cscore.java:cscore:$cameraserver_version:arm"
+
+  runtime "edu.wpi.first.wpilib:athena-runtime:$wpilib_version"
+  runtime "edu.wpi.first.wpilibj:athene-jni:$wpilib_version"
+  runtime "org.opencv:opencv-natives:$opencv_version:linux-arm"
+  runtime "org.opencv:opencv-jni:$opencv_version:linux-arm"
+  runtime "edu.wpi.cscore.java:cscore:$cameraserver_version:athena-uberzip"
+}
+
+jar {
+  from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  manifest {
+    attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+    attributes 'Robot-Class': 'com.team5499.robots.frc2017.Robot'
+  }
+}
