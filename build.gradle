@@ -1,4 +1,4 @@
-ext {
+  ext {
   wpilib_version = '2017.3.1'
   opencv_version = '3.1.0'
   networktables_version = '3.1.7'
@@ -38,10 +38,10 @@ dependencies {
   compile "edu.wpi.cscore.java:cscore:$cameraserver_version:arm"
 
   runtime "edu.wpi.first.wpilib:athena-runtime:$wpilib_version"
-  runtime "edu.wpi.first.wpilibj:athene-jni:$wpilib_version"
+  runtime "edu.wpi.first.wpilibj:athena-jni:$wpilib_version"
   runtime "org.opencv:opencv-natives:$opencv_version:linux-arm"
   runtime "org.opencv:opencv-jni:$opencv_version:linux-arm"
-  runtime "edu.wpi.cscore.java:cscore:$cameraserver_version:athena-uberzip"
+  runtime "edu.wpi.cscore.java:cscore:$cameraserver_version:athena-uberzip@zip"
 }
 
 jar {
@@ -49,5 +49,23 @@ jar {
   manifest {
     attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
     attributes 'Robot-Class': 'com.team5499.robots.frc2017.Robot'
+  }
+}
+
+task installRuntimeLibraries(type: DefaultTask) {
+  configurations.runtime.asFileTree.each { lib ->
+    copy {
+      from zipTree(lib)
+      into 'build/runtimeLibraries'
+      include '**/*.so*'
+      includeEmptyDirs = false
+      eachFile { details ->
+        details.setRelativePath(new RelativePath(true, details.getName()))
+      }
+    }
+  }
+  exec {
+    commandLine 'rsync'
+    args '-c', '-z', '-r', '-v', 'build/runtimeLibraries/', 'admin@roborio-vm:/usr/local/frc/lib'
   }
 }
