@@ -1,8 +1,8 @@
-  ext {
-  wpilib_version = '2017.3.1'
-  opencv_version = '3.1.0'
-  networktables_version = '3.1.7'
-  cameraserver_version = '1.0.2'
+ext {
+  WPILib_version = '2017.3.1'
+  OpenCV_version = '3.1.0'
+  NetworkTables_version = '3.1.7'
+  CameraServer_version = '1.0.2'
 }
 
 buildscript {
@@ -32,16 +32,16 @@ repositories {
 
 dependencies {
   compile 'org.jetbrains.kotlin:kotlin-stdlib'
-  compile "edu.wpi.first.wpilibj:athena:$wpilib_version"
-  compile "org.opencv:opencv-java:$opencv_version"
-  compile "edu.wpi.first.wpilib.networktables.java:NetworkTables:$networktables_version:arm"
-  compile "edu.wpi.cscore.java:cscore:$cameraserver_version:arm"
+  compile "edu.wpi.first.wpilibj:athena:$WPILib_version"
+  compile "org.opencv:opencv-java:$OpenCV_version"
+  compile "edu.wpi.first.wpilib.networktables.java:NetworkTables:$NetworkTables_version:arm"
+  compile "edu.wpi.cscore.java:cscore:$CameraServer_version:arm"
 
-  runtime "edu.wpi.first.wpilib:athena-runtime:$wpilib_version"
-  runtime "edu.wpi.first.wpilibj:athena-jni:$wpilib_version"
-  runtime "org.opencv:opencv-natives:$opencv_version:linux-arm"
-  runtime "org.opencv:opencv-jni:$opencv_version:linux-arm"
-  runtime "edu.wpi.cscore.java:cscore:$cameraserver_version:athena-uberzip@zip"
+  runtime "edu.wpi.first.wpilib:athena-runtime:$WPILib_version"
+  runtime "edu.wpi.first.wpilibj:athena-jni:$WPILib_version"
+  runtime "org.opencv:opencv-natives:$OpenCV_version:linux-arm"
+  runtime "org.opencv:opencv-jni:$OpenCV_version:linux-arm"
+  runtime "edu.wpi.cscore.java:cscore:$CameraServer_version:athena-uberzip@zip"
 }
 
 jar {
