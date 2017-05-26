@@ -3,6 +3,11 @@ ext {
   OpenCV_version = '3.1.0'
   NetworkTables_version = '3.1.7'
   CameraServer_version = '1.0.2'
+
+  RoboRIO_target = 'roborio-vm'
+  RoboRIO_user = 'admin'
+
+  MainClass = 'com.team5499.robots.frc2017.Robot'
 }
 
 buildscript {
@@ -48,24 +53,31 @@ jar {
   from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
   manifest {
     attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-    attributes 'Robot-Class': 'com.team5499.robots.frc2017.Robot'
+    attributes 'Robot-Class': "$MainClass"
   }
 }
 
-task installRuntimeLibraries(type: DefaultTask) {
-  configurations.runtime.asFileTree.each { lib ->
-    copy {
-      from zipTree(lib)
-      into 'build/runtimeLibraries'
-      include '**/*.so*'
-      includeEmptyDirs = false
-      eachFile { details ->
-        details.setRelativePath(new RelativePath(true, details.getName()))
+task deploy {
+  dependsOn build
+  doLast {
+    configurations.runtime.asFileTree.each { lib ->
+      copy {
+        from zipTree(lib)
+        into getTemporaryDir().toPath().resolve('runtimeLibraries')
+        include '**/*.so*'
+        includeEmptyDirs = false
+        eachFile { details ->
+          details.setRelativePath(new RelativePath(true, details.getName()))
+        }
       }
     }
-  }
-  exec {
-    commandLine 'rsync'
-    args '-c', '-z', '-r', '-v', 'build/runtimeLibraries/', 'admin@roborio-vm:/usr/local/frc/lib'
+    exec {
+      commandLine 'rsync'
+      args '-c', '-z', '-r', '-v', getTemporaryDir().toPath().resolve('runtimeLibraries').toString() + File.separator, "$RoboRIO_user@$RoboRIO_target:/usr/local/frc/lib"
+    }
+    exec {
+      commandLine 'scp'
+      args jar.archivePath, "$RoboRIO_user@$RoboRIO_target:/home/lvuser/FRC_UserProgram.jar"
+    }
   }
 }

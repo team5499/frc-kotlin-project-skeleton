@@ -5,5 +5,4 @@ The first step to using the skeleton is installing the necessary runtime librari
 ## Usage
 Build with `./gradlew build`.
 ## TODO
-* Add deploy task.
 * Write better docs about setting the correct `JvmName` for the `RobotClass` file.
