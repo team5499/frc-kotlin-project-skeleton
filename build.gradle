@@ -57,8 +57,7 @@ jar {
   }
 }
 
-task deploy {
-  dependsOn build
+task runtimeLibraries {
   doLast {
     configurations.runtime.asFileTree.each { lib ->
       copy {
@@ -71,9 +70,16 @@ task deploy {
         }
       }
     }
+  }
+}
+   
+task deploy {
+  dependsOn build
+  dependsOn runtimeLibraries
+  doLast {
     exec {
       commandLine 'rsync'
-      args '-c', '-z', '-r', '-v', getTemporaryDir().toPath().resolve('runtimeLibraries').toString() + File.separator, "$RoboRIO_user@$RoboRIO_target:/usr/local/frc/lib"
+      args '-c', '-z', '-r', '-v', runtimeLibraries.getTemporaryDir().toPath().resolve('runtimeLibraries').toString() + File.separator, "$RoboRIO_user@$RoboRIO_target:/usr/local/frc/lib"
     }
     exec {
       commandLine 'scp'
